@@ -1,6 +1,8 @@
 body {
     width: 100%;
     min-height: 100%;
+    padding: 0;
+    margin: 0;
 }
 
 nav {
@@ -10,6 +12,7 @@ nav {
     height: 30px;
     background-color: #888;
     margin: 0 auto;
+    padding: 0;
 }
 
 #main-content{
@@ -25,6 +28,7 @@ nav {
     flex-direction: column;
     flex-wrap: nowrap;
     margin: 20px auto;
+    border: solid .5px black;
 }
 
 #grid .row {
@@ -38,5 +42,5 @@ nav {
     width: 25px;
     margin: 0;
     padding: 0;
-    border: solid 1px black;
+    border: solid .5px black;
 }
