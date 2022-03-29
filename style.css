@@ -43,4 +43,17 @@ nav {
     margin: 0;
     padding: 0;
     border: solid .5px black;
+    position: relative;
 }
+
+
+/* This is to cover the tiles until click to reveal */
+/* .tile::after{
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #DDD;
+} */

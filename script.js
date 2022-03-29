@@ -25,7 +25,6 @@ class Tile {
         } else {
             this.counter++;
         }
-        // console.log(this.counter);
     }
 
     removeCount(){
@@ -63,6 +62,16 @@ class Tile {
         return matrix;
     }
 
+    tileContent(){
+        if (this.mine === true){
+            //insert mine photo here, but using M for now
+            this.element.innerHTML = 'M';
+        }else if (this.counter !== null) {
+            //insert counter value in box
+            this.element.innerHTML = this.counter;
+        }
+    }
+
     //Insert tile reveal function here
 
     //Insert recursive blank opening here
@@ -79,6 +88,8 @@ class Board {
         this.makeGrid();
         this.makeTiles();
         this.chooseMines();
+        this.populateElements();
+
     }
 
     makeGrid() {
@@ -92,8 +103,6 @@ class Board {
             }
         }
         this.grid = newGrid;
-
-
     }
 
     makeTiles() {
@@ -113,7 +122,6 @@ class Board {
                 // console.log(newTile.element);
             }
         }
-        // this.grid.forEach
     }
 
     chooseMines() {
@@ -130,6 +138,12 @@ class Board {
             }
         }
         // console.log(mineArray);
+    }
+
+    populateElements(){
+        for (let i=0; i<this.tiles.length; i++) {
+            this.tiles[i].tileContent();
+        }
     }
 }
 
