@@ -125,17 +125,8 @@ class Board {
                 mineTile.mineCounter();
             }
         }
-        // console.log(mineArray);
+        console.log(mineArray);
     }
 }
-//the grid is in this format: grid[row][column];
-// grid = Array(10).fill().map(() => (Array(10).fill('tile')));
+
 let grid = new Board(10, 10).grid;
-// console.log(grid);
-// let tile = new Tile(grid, [3, 3]);
-// grid[3][3] = tile;
-
-
-// tile.countUp();
-// tile.countUp();
-// tile.matrixFormation();
