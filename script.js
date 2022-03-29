@@ -7,15 +7,15 @@ class Tile {
         this.column = column;
         this.grid = grid
         this.id = id;
-        this.element = document.getElementById(id);
+        this.createTileElement();
     }
 
     createTileElement() {
         let newElement = document.createElement('div');
         newElement.setAttribute('id', this.id);
         newElement.classList.add('tile');
-        // console.log(newElement);
-        return newElement;
+        this.element = newElement;
+        return this.element;
     }
 
     //to tick up the counter for numbers on the grid
@@ -28,6 +28,10 @@ class Tile {
         // console.log(this.counter);
     }
 
+    removeCount(){
+        //this is just in case a mine tile gets a counter to prevent bugs
+        this.counter = null;
+    }
     //this increments the counter for numbered tiles
     mineCounter() {
         if (this.mine === true) {
@@ -55,7 +59,7 @@ class Tile {
                 }
             }
         }
-        console.log(matrix);
+        // console.log(matrix);
         return matrix;
     }
 
@@ -75,7 +79,6 @@ class Board {
         this.makeGrid();
         this.makeTiles();
         this.chooseMines();
-        // this.grid = [];
     }
 
     makeGrid() {
@@ -93,7 +96,6 @@ class Board {
 
     }
 
-
     makeTiles() {
         //creating elements for the grid
         let gridElement = document.getElementById('grid');
@@ -106,11 +108,12 @@ class Board {
             for (let j = 0; j < this.columns; j++) {
                 let newTile = new Tile(this.grid, [i, j]);
                 this.grid[i][j] = newTile;
-                newRow.appendChild(newTile.createTileElement());
+                newRow.appendChild(newTile.element);
                 this.tiles.push(newTile);
+                // console.log(newTile.element);
             }
         }
-        // console.log(this.grid);
+        // this.grid.forEach
     }
 
     chooseMines() {
@@ -123,9 +126,10 @@ class Board {
                 mineTile.mine = true;
                 // console.log(mineNumber);
                 mineTile.mineCounter();
+                mineTile.removeCount();
             }
         }
-        console.log(mineArray);
+        // console.log(mineArray);
     }
 }
 
