@@ -63,16 +63,16 @@ class Tile {
         return matrix;
     }
 
-    tileContent() {
-        //might want to look into ::before content to hide the content from devtools? idk.
-        if (this.mine === true) {
-            //insert mine image here, but using M for now
-            this.element.innerHTML = 'M';
-        } else if (this.counter !== null) {
-            //insert counter value in box
-            this.element.innerHTML = this.counter;
-        }
-    }
+    // tileContent() {
+    //     //might want to look into ::before content to hide the content from devtools? idk.
+    //     if (this.mine === true) {
+    //         //insert mine image here, but using M for now
+    //         this.element.innerHTML = 'M';
+    //     } else if (this.counter !== null) {
+    //         //insert counter value in box
+    //         this.element.innerHTML = this.counter;
+    //     }
+    // }
 
     //Insert tile reveal function here
     addTileListeners() {
@@ -83,7 +83,6 @@ class Tile {
             if (this.element.classList.contains('hidden')) {
                 if (!this.element.classList.contains('flag')) {
                     this.element.classList.add('flag');
-                    console.log('flag class added to box' + this.id);
                 } else {
                     this.element.classList.remove('flag');
                     this.tileReveal();
@@ -96,6 +95,37 @@ class Tile {
         this.element.addEventListener('click', ()=> {
             if(!this.element.classList.contains('flag')){
                 this.element.classList.remove('hidden');
+                this.element.classList.add('tile-content');
+                if(this.mine === true){
+                    this.element.style.setProperty('--tile-bg', "url(img/mine.png)");
+                    // this.element.classList.add('red');
+                }
+                switch (this.counter) {
+                    case 1:
+                        this.element.style.setProperty('--tile-bg', "url(img/one.png)");
+                        break;
+                    case 2:
+                        this.element.style.setProperty('--tile-bg', "url(img/two.png)");
+                        break;
+                    case 3:
+                        this.element.style.setProperty('--tile-bg', "url(img/three.png)");
+                        break;
+                    case 4:
+                        this.element.style.setProperty('--tile-bg', "url(img/four.png)");
+                        break;
+                    case 5:
+                        this.element.style.setProperty('--tile-bg', "url(img/five.png)");
+                        break;
+                    case 6:
+                        this.element.style.setProperty('--tile-bg', "url(img/six.png)");
+                        break;
+                    case 7:
+                        this.element.style.setProperty('--tile-bg', "url(img/seven.png)");
+                        break;
+                    case 8:
+                        this.element.style.setProperty('--tile-bg', "url(img/eight.png)");
+                        break;
+                }
             }
         }, {once: true});
     }
@@ -169,7 +199,7 @@ class Board {
     //can use this function to add the event listeners
     populateElements() {
         for (let i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].tileContent();
+            // this.tiles[i].tileContent();
         }
     }
 }
