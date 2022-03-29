@@ -8,12 +8,14 @@ class Tile {
         this.grid = grid
         this.id = id;
         this.createTileElement();
+        this.addTileListeners();
     }
 
     createTileElement() {
         let newElement = document.createElement('div');
         newElement.setAttribute('id', this.id);
         newElement.classList.add('tile');
+        newElement.classList.add('hidden');
         this.element = newElement;
         return this.element;
     }
@@ -27,7 +29,7 @@ class Tile {
         }
     }
 
-    removeCount(){
+    removeCount() {
         //this is just in case a mine tile gets a counter to prevent bugs
         this.counter = null;
     }
@@ -45,7 +47,6 @@ class Tile {
         }
     }
 
-
     matrixFormation() {
         //form populated matrix
         let matrix = []
@@ -62,17 +63,43 @@ class Tile {
         return matrix;
     }
 
-    tileContent(){
-        if (this.mine === true){
-            //insert mine photo here, but using M for now
+    tileContent() {
+        //might want to look into ::before content to hide the content from devtools? idk.
+        if (this.mine === true) {
+            //insert mine image here, but using M for now
             this.element.innerHTML = 'M';
-        }else if (this.counter !== null) {
+        } else if (this.counter !== null) {
             //insert counter value in box
             this.element.innerHTML = this.counter;
         }
     }
 
     //Insert tile reveal function here
+    addTileListeners() {
+        this.tileReveal();
+
+        this.element.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if (this.element.classList.contains('hidden')) {
+                if (!this.element.classList.contains('flag')) {
+                    this.element.classList.add('flag');
+                    console.log('flag class added to box' + this.id);
+                } else {
+                    this.element.classList.remove('flag');
+                    this.tileReveal();
+                }
+            }
+        });
+    }
+
+    tileReveal() {
+        this.element.addEventListener('click', ()=> {
+            if(!this.element.classList.contains('flag')){
+                this.element.classList.remove('hidden');
+            }
+        }, {once: true});
+    }
+
 
     //Insert recursive blank opening here
 }
@@ -89,7 +116,6 @@ class Board {
         this.makeTiles();
         this.chooseMines();
         this.populateElements();
-
     }
 
     makeGrid() {
@@ -140,8 +166,9 @@ class Board {
         // console.log(mineArray);
     }
 
-    populateElements(){
-        for (let i=0; i<this.tiles.length; i++) {
+    //can use this function to add the event listeners
+    populateElements() {
+        for (let i = 0; i < this.tiles.length; i++) {
             this.tiles[i].tileContent();
         }
     }

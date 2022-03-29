@@ -44,11 +44,13 @@ nav {
     padding: 0;
     border: solid .5px black;
     position: relative;
+    pointer-events: none;
 }
 
 
 /* This is to cover the tiles until click to reveal */
-/* .tile::after{
+/* Source: https://bryanlrobinson.com/blog/how-to-css-after-elements-for-background-overlays/ */
+.hidden::after{
     position: absolute;
     content: "";
     top: 0;
@@ -56,4 +58,20 @@ nav {
     height: 100%;
     width: 100%;
     background-color: #DDD;
-} */
+    pointer-events: all;
+}
+
+/* Add a class to have tile content hidden from DOM */
+/* .tileContent::after */
+
+/* ---Class prepared for flag on right click--- */
+.flag::after{
+    z-index: 1;
+    content: "F";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #111;
+} 
