@@ -1,12 +1,12 @@
 class Tile {
-    constructor(grid, [row, column]) {
-        let id = `${row}-${column}`;
+    constructor(grid, [row, column], Board) {
         this.mine = false;
         this.counter = null;
         this.row = row;
         this.column = column;
         this.grid = grid
-        this.id = id;
+        this.id = `${row}-${column}`;
+        this.Board = Board;
         this.createTileElement();
         this.addTileListeners();
     }
@@ -63,31 +63,23 @@ class Tile {
         return matrix;
     }
 
-    // tileContent() {
-    //     //might want to look into ::before content to hide the content from devtools? idk.
-    //     if (this.mine === true) {
-    //         //insert mine image here, but using M for now
-    //         this.element.innerHTML = 'M';
-    //     } else if (this.counter !== null) {
-    //         //insert counter value in box
-    //         this.element.innerHTML = this.counter;
-    //     }
-    // }
-
-    //Insert tile reveal function here
     addTileListeners() {
         this.tileReveal();
 
         this.element.addEventListener('contextmenu', (e) => {
             e.preventDefault();
+            let flagCount = this.Board.mineCount;
             if (this.element.classList.contains('hidden')) {
                 if (!this.element.classList.contains('flag')) {
                     this.element.classList.add('flag');
+                    flagCount--;
                 } else {
                     this.element.classList.remove('flag');
                     this.tileReveal();
+                    flagCount++;
                 }
             }
+            //Use flagcount to update the mine counter (in stretch goals)
         });
     }
 
@@ -145,7 +137,7 @@ class Board {
         this.makeGrid();
         this.makeTiles();
         this.chooseMines();
-        this.populateElements();
+        // this.populateElements();
     }
 
     makeGrid() {
