@@ -85,7 +85,7 @@ nav {
 /* ---Class prepared for flag on right click--- */
 .flag::after {
     z-index: 1;
-    background-image: url('img/red_flag.png');
+    background-image: url(img/red_flag.png);
     background-repeat: no-repeat;
     background-size: cover;
     position: absolute;

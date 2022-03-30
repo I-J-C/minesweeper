@@ -1,6 +1,7 @@
 class Tile {
     constructor(grid, [row, column], Board) {
         this.mine = false;
+        this.hidden = true;
         this.counter = null;
         this.row = row;
         this.column = column;
@@ -66,31 +67,42 @@ class Tile {
     addTileListeners() {
         this.tileReveal();
 
-        this.element.addEventListener('contextmenu', (e) => {
+        this.element.addEventListener('contextmenu', e => {
             e.preventDefault();
-            let flagCount = this.Board.mineCount;
+            // let flagCount = this.Board.mineCount;
             if (this.element.classList.contains('hidden')) {
                 if (!this.element.classList.contains('flag')) {
                     this.element.classList.add('flag');
-                    flagCount--;
+                    // flagCount--;
                 } else {
                     this.element.classList.remove('flag');
                     this.tileReveal();
-                    flagCount++;
+                    // flagCount++;
                 }
             }
             //Use flagcount to update the mine counter (in stretch goals)
-        });
+        },{signal: this.Board.controller.signal});
     }
 
     tileReveal() {
+        const controller = new AbortController();
         this.element.addEventListener('click', ()=> {
             if(!this.element.classList.contains('flag')){
                 this.element.classList.remove('hidden');
+                this.hidden = false;
                 this.element.classList.add('tile-content');
                 if(this.mine === true){
                     this.element.style.setProperty('--tile-bg', "url(img/mine.png)");
-                    // this.element.classList.add('red');
+                    if (this.Board.mineClicked === false){
+                        this.element.classList.add('red');
+                        // console.log('changing first mine to red');
+                        this.Board.mineClicked = true;
+                        this.Board.clickMines();
+                        this.Board.controller.abort();
+                        //ADD LOST GAME FUNCTION HERE
+
+                    }
+                    
                 }
                 switch (this.counter) {
                     case 1:
@@ -119,7 +131,7 @@ class Tile {
                         break;
                 }
             }
-        }, {once: true});
+        }, {once: true, signal: this.Board.controller.signal});
     }
 
 
@@ -129,11 +141,14 @@ class Tile {
 //class for the grid formation upon game start
 class Board {
     constructor(rows, columns, mineCount = 10) {
+        let controller = new AbortController();
+        this.controller = controller;
         this.rows = rows;
         this.columns = columns;
         this.mineCount = mineCount;
         this.tiles = [];
         this.grid = [];
+        this.mineClicked = false;
         this.makeGrid();
         this.makeTiles();
         this.chooseMines();
@@ -163,7 +178,7 @@ class Board {
             gridElement.appendChild(newRow);
             // console.log(newRow);
             for (let j = 0; j < this.columns; j++) {
-                let newTile = new Tile(this.grid, [i, j]);
+                let newTile = new Tile(this.grid, [i, j], this);
                 this.grid[i][j] = newTile;
                 newRow.appendChild(newTile.element);
                 this.tiles.push(newTile);
@@ -173,11 +188,11 @@ class Board {
     }
 
     chooseMines() {
-        let mineArray = [];
-        while (mineArray.length < this.mineCount) {
+        this.mineArray = [];
+        while (this.mineArray.length < this.mineCount) {
             let mineNumber = Math.floor(Math.random() * (this.rows * this.columns));
-            if (!mineArray.includes(mineNumber)) {
-                mineArray.push(mineNumber);
+            if (!this.mineArray.includes(mineNumber)) {
+                this.mineArray.push(mineNumber);
                 let mineTile = this.tiles[mineNumber];
                 mineTile.mine = true;
                 // console.log(mineNumber);
@@ -188,6 +203,13 @@ class Board {
         // console.log(mineArray);
     }
 
+    clickMines(){
+        for (let i=0; i < this.mineArray.length; i++) {
+            this.tiles[this.mineArray[i]].element.click();
+            // console.log('clicking tile ' + this.tiles[this.mineArray[i]].id);
+        }
+    }
+
     //can use this function to add the event listeners
     populateElements() {
         for (let i = 0; i < this.tiles.length; i++) {
@@ -195,5 +217,11 @@ class Board {
         }
     }
 }
+new Board(10, 10);
 
-let grid = new Board(10, 10).grid;
+const resetButton = document.getElementById('reset-game');
+const gridElement = document.getElementById('grid');
+resetButton.addEventListener('click', ()=> {
+    gridElement.innerHTML = '';
+    new Board(10, 10);
+});
