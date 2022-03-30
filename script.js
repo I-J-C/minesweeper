@@ -95,14 +95,13 @@ class Tile {
                     this.element.style.setProperty('--tile-bg', "url(img/mine.png)");
                     if (this.Board.mineClicked === false){
                         this.element.classList.add('red');
-                        // console.log('changing first mine to red');
                         this.Board.mineClicked = true;
                         this.Board.clickMines();
                         this.Board.controller.abort();
+                        // console.log('you lose')
+                        //End timer here (stretch goal)
                         //ADD LOST GAME FUNCTION HERE
-
                     }
-                    
                 }
                 switch (this.counter) {
                     case 1:
@@ -130,6 +129,12 @@ class Tile {
                         this.element.style.setProperty('--tile-bg', "url(img/eight.png)");
                         break;
                 }
+                let win = this.Board.checkWin();
+                if (win===true){
+                    // WIN CONDITION HERE
+                    // console.log('you win!')
+                    this.Board.controller.abort();
+                }
             }
         }, {once: true, signal: this.Board.controller.signal});
     }
@@ -140,7 +145,7 @@ class Tile {
 
 //class for the grid formation upon game start
 class Board {
-    constructor(rows, columns, mineCount = 10) {
+    constructor(rows = 10, columns = 10, mineCount = 10) {
         let controller = new AbortController();
         this.controller = controller;
         this.rows = rows;
@@ -148,11 +153,11 @@ class Board {
         this.mineCount = mineCount;
         this.tiles = [];
         this.grid = [];
+        this.remainingTiles = []
         this.mineClicked = false;
         this.makeGrid();
         this.makeTiles();
         this.chooseMines();
-        // this.populateElements();
     }
 
     makeGrid() {
@@ -185,6 +190,7 @@ class Board {
                 // console.log(newTile.element);
             }
         }
+        this.remainingTiles = this.tiles;
     }
 
     chooseMines() {
@@ -206,22 +212,27 @@ class Board {
     clickMines(){
         for (let i=0; i < this.mineArray.length; i++) {
             this.tiles[this.mineArray[i]].element.click();
-            // console.log('clicking tile ' + this.tiles[this.mineArray[i]].id);
         }
     }
 
-    //can use this function to add the event listeners
-    populateElements() {
-        for (let i = 0; i < this.tiles.length; i++) {
-            // this.tiles[i].tileContent();
+    checkWin() {
+        this.remainingTiles = this.tiles.filter((tile)=>{
+            return tile.hidden;
+        });
+        if (this.remainingTiles.length === this.mineArray.length){
+            return true;
+        }else{
+            return false;
         }
     }
 }
-new Board(10, 10);
+new Board();
 
 const resetButton = document.getElementById('reset-game');
 const gridElement = document.getElementById('grid');
+
 resetButton.addEventListener('click', ()=> {
     gridElement.innerHTML = '';
-    new Board(10, 10);
+    new Board();
+    //start timer here (stretch goal)
 });

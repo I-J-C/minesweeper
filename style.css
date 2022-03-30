@@ -52,6 +52,11 @@ nav {
     pointer-events: none;
 }
 
+#reset-game{
+    width: 100px;
+    margin: 0 auto;
+}
+
 
 /* This is to cover the tiles until click to reveal */
 /* Source: https://bryanlrobinson.com/blog/how-to-css-after-elements-for-background-overlays/ */
