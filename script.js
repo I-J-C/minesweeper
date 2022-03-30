@@ -8,6 +8,7 @@ class Tile {
         this.grid = grid
         this.id = `${row}-${column}`;
         this.Board = Board;
+        this.clicked = false;
         this.createTileElement();
         this.addTileListeners();
     }
@@ -81,19 +82,21 @@ class Tile {
                 }
             }
             //Use flagcount to update the mine counter (in stretch goals)
-        },{signal: this.Board.controller.signal});
+        }, {
+            signal: this.Board.controller.signal
+        });
     }
 
     tileReveal() {
         const controller = new AbortController();
-        this.element.addEventListener('click', ()=> {
-            if(!this.element.classList.contains('flag')){
+        this.element.addEventListener('click', () => {
+            if (!this.element.classList.contains('flag')) {
                 this.element.classList.remove('hidden');
                 this.hidden = false;
                 this.element.classList.add('tile-content');
-                if(this.mine === true){
+                if (this.mine === true) {
                     this.element.style.setProperty('--tile-bg', "url(img/mine.png)");
-                    if (this.Board.mineClicked === false){
+                    if (this.Board.mineClicked === false) {
                         this.element.classList.add('red');
                         this.Board.mineClicked = true;
                         this.Board.clickMines();
@@ -129,18 +132,23 @@ class Tile {
                         this.element.style.setProperty('--tile-bg', "url(img/eight.png)");
                         break;
                 }
+                if (!this.counter && !this.mine && this.clicked === false) {
+                    this.clicked = true;
+                    this.Board.clickBlank(this.row, this.column);
+                }
                 let win = this.Board.checkWin();
-                if (win===true){
+                if (win === true) {
                     // WIN CONDITION HERE
                     // console.log('you win!')
                     this.Board.controller.abort();
                 }
             }
-        }, {once: true, signal: this.Board.controller.signal});
+        }, {
+            once: true,
+            signal: this.Board.controller.signal
+        });
     }
 
-
-    //Insert recursive blank opening here
 }
 
 //class for the grid formation upon game start
@@ -209,19 +217,44 @@ class Board {
         // console.log(mineArray);
     }
 
-    clickMines(){
-        for (let i=0; i < this.mineArray.length; i++) {
+    clickMines() {
+        for (let i = 0; i < this.mineArray.length; i++) {
             this.tiles[this.mineArray[i]].element.click();
         }
     }
 
+    clickBlank(row, column) {
+        if (row < 0 || column < 0 || row === this.rows || column === this.columns || this.grid[row][column].traversed === true) {
+            return;
+        }
+        if (this.grid[row][column].clicked !== undefined && this.grid[row][column].clicked === false) {
+            //this checks for revealed tiles
+            if (this.grid[row][column].hidden === true) {
+                this.grid[row][column].clicked = true;
+                this.grid[row][column].element.click();
+            }
+            if (this.grid[row][column].counter !== null) {
+                this.grid[row][column].traversed = true;
+                return;
+            }
+        }
+        if (this.grid[row][column].traversed === undefined) {
+            this.grid[row][column].traversed = true;
+        }
+        this.clickBlank(row+1, column); //go down
+        this.clickBlank(row-1, column); //go up
+        this.clickBlank(row, column+1); //go right
+        this.clickBlank(row, column-1); //go left
+        return;
+    }
+
     checkWin() {
-        this.remainingTiles = this.tiles.filter((tile)=>{
+        this.remainingTiles = this.tiles.filter((tile) => {
             return tile.hidden;
         });
-        if (this.remainingTiles.length === this.mineArray.length){
+        if (this.remainingTiles.length === this.mineArray.length) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -231,7 +264,7 @@ new Board();
 const resetButton = document.getElementById('reset-game');
 const gridElement = document.getElementById('grid');
 
-resetButton.addEventListener('click', ()=> {
+resetButton.addEventListener('click', () => {
     gridElement.innerHTML = '';
     new Board();
     //start timer here (stretch goal)
