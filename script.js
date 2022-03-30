@@ -8,7 +8,6 @@ class Tile {
         this.grid = grid
         this.id = `${row}-${column}`;
         this.Board = Board;
-        this.clicked = false;
         this.createTileElement();
         this.addTileListeners();
     }
@@ -132,8 +131,7 @@ class Tile {
                         this.element.style.setProperty('--tile-bg', "url(img/eight.png)");
                         break;
                 }
-                if (!this.counter && !this.mine && this.clicked === false) {
-                    this.clicked = true;
+                if (!this.counter && !this.mine) {
                     this.Board.clickBlank(this.row, this.column);
                 }
                 let win = this.Board.checkWin();
@@ -227,24 +225,15 @@ class Board {
         if (row < 0 || column < 0 || row === this.rows || column === this.columns || this.grid[row][column].traversed === true) {
             return;
         }
-        if (this.grid[row][column].clicked !== undefined && this.grid[row][column].clicked === false) {
-            //this checks for revealed tiles
-            if (this.grid[row][column].hidden === true) {
-                this.grid[row][column].clicked = true;
-                this.grid[row][column].element.click();
-            }
-            if (this.grid[row][column].counter !== null) {
-                this.grid[row][column].traversed = true;
-                return;
-            }
+        this.grid[row][column].traversed = true;
+        this.grid[row][column].element.click();
+        if (this.grid[row][column].counter !== null) {
+            return;
         }
-        if (this.grid[row][column].traversed === undefined) {
-            this.grid[row][column].traversed = true;
-        }
-        this.clickBlank(row+1, column); //go down
-        this.clickBlank(row-1, column); //go up
-        this.clickBlank(row, column+1); //go right
-        this.clickBlank(row, column-1); //go left
+        this.clickBlank(row + 1, column); //go down
+        this.clickBlank(row - 1, column); //go up
+        this.clickBlank(row, column + 1); //go right
+        this.clickBlank(row, column - 1); //go left
         return;
     }
 
