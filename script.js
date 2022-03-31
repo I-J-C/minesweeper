@@ -90,6 +90,11 @@ class Tile {
         const controller = new AbortController();
         this.element.addEventListener('click', () => {
             if (!this.element.classList.contains('flag')) {
+                //this checks for first tile clicked to populate mines
+                if (this.Board.tileClicked === false) {
+                    this.Board.tileClicked = true;
+                    this.Board.chooseMines(this.row, this.column);
+                }
                 this.element.classList.remove('hidden');
                 this.hidden = false;
                 this.element.classList.add('tile-content');
@@ -153,6 +158,7 @@ class Tile {
 class Board {
     constructor(rows = 10, columns = 10, mineCount = 10) {
         let controller = new AbortController();
+        this.tileClicked = false;
         this.controller = controller;
         this.rows = rows;
         this.columns = columns;
@@ -163,7 +169,6 @@ class Board {
         this.mineClicked = false;
         this.makeGrid();
         this.makeTiles();
-        this.chooseMines();
     }
 
     makeGrid() {
@@ -199,20 +204,18 @@ class Board {
         this.remainingTiles = this.tiles;
     }
 
-    chooseMines() {
+    chooseMines(firstRow, firstColumn) {
         this.mineArray = [];
         while (this.mineArray.length < this.mineCount) {
             let mineNumber = Math.floor(Math.random() * (this.rows * this.columns));
-            if (!this.mineArray.includes(mineNumber)) {
+            if (!this.mineArray.includes(mineNumber) && mineNumber !== (firstRow*10 + firstColumn)) {
                 this.mineArray.push(mineNumber);
                 let mineTile = this.tiles[mineNumber];
                 mineTile.mine = true;
-                // console.log(mineNumber);
                 mineTile.mineCounter();
                 mineTile.removeCount();
             }
         }
-        // console.log(mineArray);
     }
 
     clickMines() {
@@ -227,6 +230,7 @@ class Board {
         }
         this.grid[row][column].traversed = true;
         this.grid[row][column].element.click();
+        //This checks for a numbered tile to stop in that direction
         if (this.grid[row][column].counter !== null) {
             return;
         }
