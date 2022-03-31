@@ -8,12 +8,12 @@
 ![MVP In-Progress](img/MVP_inprogress.png)
 
 ## Technologies Used:
-    1. HTML
-    1. CSS
-    1. JavaScript
-    1. Git
-    1. GitHub
-    1. GitHub Pages
+    - HTML
+    - CSS
+    - JavaScript
+    - Git
+    - GitHub
+    - GitHub Pages
 
 ## Installation Insructions:
 
@@ -21,11 +21,11 @@
 
 ## User Stories
 
-    1. As a player, I want some indicator that I am selecting a tile to know it worked.
-    1. As a player, I want to left-click to reveal tiles and right-click to mark mines.
-    1. As a player, when I reveal an empty tile, I want all other adjacent empty tiles to reveal themselves until numbered tiles are revealed.
-    1. As a player, I want my game to recognize when I have won or lost.
-    1. As a player, if I lose, I want my game to reveal where missed mines were located. 
+1. As a player, I want some indicator that I am selecting a tile to know it worked.
+1. As a player, I want to left-click to reveal tiles and right-click to mark mines.
+1. As a player, when I reveal an empty tile, I want all other adjacent empty tiles to reveal themselves until numbered tiles are revealed.
+1. As a player, I want my game to recognize when I have won or lost.
+1. As a player, if I lose, I want my game to reveal where missed mines were located. 
 
 ## Wireframes
 ### Starting State:
