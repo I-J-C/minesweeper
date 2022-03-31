@@ -246,7 +246,6 @@ class Board {
     }
 
     startTimer() {
-        // console.log(this.totalSeconds);
         seconds.innerHTML = 0;
         if (!this.timerID) {
             if (this.totalSeconds > 0 || !this.totalSeconds) {
@@ -255,7 +254,7 @@ class Board {
             this.timerID = setInterval(() => {
                 //based on code from here: http://stackoverflow.com/questions/45808844/adding-start-stop-reset-button-for-timer
                 this.totalSeconds++;
-                console.log(this.totalSeconds);
+                //minute option here for later
                 // minutes.innerHTML = minute;
                 seconds.innerHTML = this.totalSeconds;
                 
@@ -294,10 +293,8 @@ let board = new Board();
 resetButton.addEventListener('click', resetGame);
 
 function resetGame() {
-    console.log(board.totalSeconds);
     board.stopTimer();
     gridElement.innerHTML = '';
     board = new Board();
-    console.log(board.totalSeconds);
     gameStatus.innerHTML = '';
 }
