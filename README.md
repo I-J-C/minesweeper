@@ -10,14 +10,10 @@
 ## Technologies Used:
     1. HTML
     1. CSS
-        1. CSS custom properties (variables)
-        1. Pseudoelements (::after)
-        1. Flexbox
     1. JavaScript
-        1. Objects
-        1. Methods
-        1. Recursion
-        1. AbortController on Event Listeners
+    1. Git
+    1. GitHub
+    1. GitHub Pages
 
 ## Installation Insructions:
 
