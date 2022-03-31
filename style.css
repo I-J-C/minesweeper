@@ -17,6 +17,12 @@ nav {
     background-color: #888;
     margin: 0 auto;
     padding: 0;
+    align-items: center;
+}
+
+nav span {
+    margin-left: 50px;
+    font-weight: bold;
 }
 
 #main-content {
@@ -50,6 +56,30 @@ nav {
     border: solid .5px black;
     position: relative;
     pointer-events: none;
+}
+
+#top-bar {
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    margin-bottom: 0;
+    justify-content: space-around;
+}
+
+.flag-tracker {
+    height: 15%;
+    width: 70px;
+    font-weight: bold;
+    border: 1px solid #444;
+    padding-left: 5px;
+    padding-right: 0;
+}
+#flag-counter {
+    padding: 0;
 }
 
 #reset-game{

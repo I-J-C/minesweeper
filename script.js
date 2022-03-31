@@ -56,11 +56,9 @@ class Tile {
             for (let j = -1; j <= 1; j++) {
                 if (this.grid[this.row + i] !== undefined && this.grid[this.column + j] !== undefined) {
                     matrix[i + 1][j + 1] = this.grid[this.row + i][this.column + j];
-                    //mark center tile somehow?
                 }
             }
         }
-        // console.log(matrix);
         return matrix;
     }
 
@@ -69,25 +67,23 @@ class Tile {
 
         this.element.addEventListener('contextmenu', e => {
             e.preventDefault();
-            // let flagCount = this.Board.mineCount;
             if (this.element.classList.contains('hidden')) {
                 if (!this.element.classList.contains('flag')) {
                     this.element.classList.add('flag');
-                    // flagCount--;
+                    this.Board.flagCount--;
                 } else {
                     this.element.classList.remove('flag');
                     this.tileReveal();
-                    // flagCount++;
+                    this.Board.flagCount++;
                 }
             }
-            //Use flagcount to update the mine counter (in stretch goals)
+            this.Board.trackFlagCounter();
         }, {
             signal: this.Board.controller.signal
         });
     }
 
     tileReveal() {
-        const controller = new AbortController();
         this.element.addEventListener('click', () => {
             if (!this.element.classList.contains('flag')) {
                 //this checks for first tile clicked to populate mines
@@ -105,9 +101,9 @@ class Tile {
                         this.Board.mineClicked = true;
                         this.Board.clickMines();
                         this.Board.controller.abort();
-                        // console.log('you lose')
+                        gameStatus.innerHTML = 'Loss';
                         //End timer here (stretch goal)
-                        //ADD LOST GAME FUNCTION HERE
+                        //add lost game function here (stretch goal)
                     }
                 }
                 switch (this.counter) {
@@ -142,7 +138,7 @@ class Tile {
                 let win = this.Board.checkWin();
                 if (win === true) {
                     // WIN CONDITION HERE
-                    // console.log('you win!')
+                    gameStatus.innerHTML = 'Win!';
                     this.Board.controller.abort();
                 }
             }
@@ -167,8 +163,11 @@ class Board {
         this.grid = [];
         this.remainingTiles = []
         this.mineClicked = false;
+        this.flagCount = mineCount;
+        this.flagCounter = document.getElementById('flag-counter');
         this.makeGrid();
         this.makeTiles();
+        this.trackFlagCounter();
     }
 
     makeGrid() {
@@ -186,19 +185,17 @@ class Board {
 
     makeTiles() {
         //creating elements for the grid
-        let gridElement = document.getElementById('grid');
+        const gridElement = document.getElementById('grid');
         for (let i = 0; i < this.rows; i++) {
             let newRow = document.createElement('div');
             newRow.classList.add('row');
             newRow.setAttribute('id', `row${i}`);
             gridElement.appendChild(newRow);
-            // console.log(newRow);
             for (let j = 0; j < this.columns; j++) {
                 let newTile = new Tile(this.grid, [i, j], this);
                 this.grid[i][j] = newTile;
                 newRow.appendChild(newTile.element);
                 this.tiles.push(newTile);
-                // console.log(newTile.element);
             }
         }
         this.remainingTiles = this.tiles;
@@ -216,6 +213,10 @@ class Board {
                 mineTile.removeCount();
             }
         }
+    }
+
+    trackFlagCounter() {
+        this.flagCounter.innerHTML = this.flagCount;
     }
 
     clickMines() {
@@ -256,9 +257,12 @@ new Board();
 
 const resetButton = document.getElementById('reset-game');
 const gridElement = document.getElementById('grid');
+const gameStatus = document.getElementById('game-status');
 
-resetButton.addEventListener('click', () => {
+resetButton.addEventListener('click', resetGame);
+
+function resetGame() {
     gridElement.innerHTML = '';
     new Board();
-    //start timer here (stretch goal)
-});
+    gameStatus.innerHTML = '';
+}
