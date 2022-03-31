@@ -90,6 +90,8 @@ class Tile {
                 if (this.Board.tileClicked === false) {
                     this.Board.tileClicked = true;
                     this.Board.chooseMines(this.row, this.column);
+                    //Start timer here (stretch goal)
+                    this.Board.startTimer();
                 }
                 this.element.classList.remove('hidden');
                 this.hidden = false;
@@ -103,6 +105,7 @@ class Tile {
                         this.Board.controller.abort();
                         gameStatus.innerHTML = 'Loss';
                         //End timer here (stretch goal)
+                        this.Board.stopTimer();
                         //add lost game function here (stretch goal)
                     }
                 }
@@ -139,6 +142,7 @@ class Tile {
                 if (win === true) {
                     // WIN CONDITION HERE
                     gameStatus.innerHTML = 'Win!';
+                    this.Board.stopTimer();
                     this.Board.controller.abort();
                 }
             }
@@ -185,7 +189,6 @@ class Board {
 
     makeTiles() {
         //creating elements for the grid
-        const gridElement = document.getElementById('grid');
         for (let i = 0; i < this.rows; i++) {
             let newRow = document.createElement('div');
             newRow.classList.add('row');
@@ -205,7 +208,7 @@ class Board {
         this.mineArray = [];
         while (this.mineArray.length < this.mineCount) {
             let mineNumber = Math.floor(Math.random() * (this.rows * this.columns));
-            if (!this.mineArray.includes(mineNumber) && mineNumber !== (firstRow*10 + firstColumn)) {
+            if (!this.mineArray.includes(mineNumber) && mineNumber !== (firstRow * 10 + firstColumn)) {
                 this.mineArray.push(mineNumber);
                 let mineTile = this.tiles[mineNumber];
                 mineTile.mine = true;
@@ -242,6 +245,30 @@ class Board {
         return;
     }
 
+    startTimer() {
+        // console.log(this.totalSeconds);
+        seconds.innerHTML = 0;
+        if (!this.timerID) {
+            if (this.totalSeconds > 0 || !this.totalSeconds) {
+                this.totalSeconds = 0;
+            }
+            this.timerID = setInterval(() => {
+                //based on code from here: http://stackoverflow.com/questions/45808844/adding-start-stop-reset-button-for-timer
+                this.totalSeconds++;
+                console.log(this.totalSeconds);
+                // minutes.innerHTML = minute;
+                seconds.innerHTML = this.totalSeconds;
+                
+            }, 1000);
+        }
+    }
+
+    stopTimer() {
+        clearInterval(this.timerID);
+        this.totalSeconds = null;
+        this.timerID = null;
+    }
+
     checkWin() {
         this.remainingTiles = this.tiles.filter((tile) => {
             return tile.hidden;
@@ -253,16 +280,24 @@ class Board {
         }
     }
 }
-new Board();
+
 
 const resetButton = document.getElementById('reset-game');
 const gridElement = document.getElementById('grid');
 const gameStatus = document.getElementById('game-status');
+const timer = document.getElementById('timer');
+const minutes = document.getElementById('minutes');
+const seconds = document.getElementById('seconds');
+
+let board = new Board();
 
 resetButton.addEventListener('click', resetGame);
 
 function resetGame() {
+    console.log(board.totalSeconds);
+    board.stopTimer();
     gridElement.innerHTML = '';
-    new Board();
+    board = new Board();
+    console.log(board.totalSeconds);
     gameStatus.innerHTML = '';
 }
