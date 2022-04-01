@@ -54,7 +54,7 @@ class Tile {
         for (let i = -1; i <= 1; i++) {
             matrix[i + 1] = [];
             for (let j = -1; j <= 1; j++) {
-                if (this.grid[this.row + i] !== undefined && this.grid[this.column + j] !== undefined) {
+                if (this.grid[this.row + i] !== undefined && this.grid[this.row + i][this.column + j] !== undefined) {
                     matrix[i + 1][j + 1] = this.grid[this.row + i][this.column + j];
                 }
             }
