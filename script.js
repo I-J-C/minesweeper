@@ -5,7 +5,7 @@ class Tile {
         this.counter = null;
         this.row = row;
         this.column = column;
-        this.grid = grid
+        this.grid = grid;
         this.id = `${row}-${column}`;
         this.Board = Board;
         this.createTileElement();
